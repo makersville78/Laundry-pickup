@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Laundry Route — Blank Template</title>
+<style>
+  @page { size: letter; margin: 0.4in; }
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; color: #000; margin: 0; padding: 12px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .subhead { font-size: 13px; color: #333; margin-bottom: 10px; }
+  .meta { display: flex; gap: 20px; border: 2px solid #000; padding: 8px; margin-bottom: 12px; font-size: 14px; }
+  .meta div { flex: 1; }
+  .meta label { font-weight: bold; display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { border: 2px solid #000; padding: 10px 6px; text-align: left; vertical-align: top; height: 50px; }
+  th { background: #000; color: #fff; font-size: 12px; text-transform: uppercase; height: auto; }
+  .stop { font-size: 22px; font-weight: bold; text-align: center; width: 8%; }
+  .room { width: 14%; text-align: center; }
+  .student { width: 22%; }
+  .check { width: 10%; text-align: center; }
+  .time { width: 14%; }
+  .notes { width: 32%; }
+  .box { display: inline-block; width: 22px; height: 22px; border: 2px solid #000; vertical-align: middle; }
+  .blank-line { display: inline-block; border-bottom: 1px solid #000; min-width: 140px; height: 18px; }
+  .tip { margin-top: 12px; font-size: 12px; color: #444; border-top: 1px dashed #999; padding-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>Laundry Route — Blank Template</h1>
+<div class="subhead">Fill in room numbers and student names before the route starts. One basket per student.</div>
+
+<div class="meta">
+  <div><label>Date</label><span class="blank-line"></span></div>
+  <div><label>Para</label><span class="blank-line"></span></div>
+  <div><label>Start time</label><span class="blank-line"></span></div>
+  <div><label>End time</label><span class="blank-line"></span></div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th class="stop">Stop</th>
+      <th class="room">Room #</th>
+      <th class="student">Student (basket carrier)</th>
+      <th class="check">Picked up?</th>
+      <th class="time">Time</th>
+      <th class="notes">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td class="stop">1</td><td class="room">&nbsp;</td><td class="student">&nbsp;</td><td class="check"><span class="box"></span></td><td class="time">&nbsp;</td><td class="notes">&nbsp;</td></tr>
+    <tr><td class="stop">2</td><td class="room">&nbsp;</td><td class="student">&nbsp;</td><td class="check"><span class="box"></span></td><td class="time">&nbsp;</td><td class="notes">&nbsp;</td></tr>
+    <tr><td class="stop">3</td><td class="room">&nbsp;</td><td class="student">&nbsp;</td><td class="check"><span class="box"></span></td><td class="time">&nbsp;</td><td class="notes">&nbsp;</td></tr>
+    <tr><td class="stop">4</td><td class="room">&nbsp;</td><td class="student">&nbsp;</td><td class="check"><span class="box"></span></td><td class="time">&nbsp;</td><td class="notes">&nbsp;</td></tr>
+    <tr><td class="stop">5</td><td class="room">&nbsp;</td><td class="student">&nbsp;</td><td class="check"><span class="box"></span></td><td class="time">&nbsp;</td><td class="notes">&nbsp;</td></tr>
+    <tr><td class="stop">6</td><td class="room">&nbsp;</td><td class="student">&nbsp;</td><td class="check"><span class="box"></span></td><td class="time">&nbsp;</td><td class="notes">&nbsp;</td></tr>
+    <tr><td class="stop">7</td><td class="room">&nbsp;</td><td class="student">&nbsp;</td><td class="check"><span class="box"></span></td><td class="time">&nbsp;</td><td class="notes">&nbsp;</td></tr>
+    <tr><td class="stop">8</td><td class="room">&nbsp;</td><td class="student">&nbsp;</td><td class="check"><span class="box"></span></td><td class="time">&nbsp;</td><td class="notes">&nbsp;</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">8 rows so the same template scales when you add more baskets. Cross out unused rows for shorter routes.</div>
+
+</body>
+</html>

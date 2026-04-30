@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weekly Laundry Pickup Schedule</title>
+<style>
+  @page { size: letter landscape; margin: 0.4in; }
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; color: #000; margin: 0; padding: 12px; }
+  h1 { font-size: 22px; margin: 0 0 2px; }
+  .subhead { font-size: 12px; color: #333; margin-bottom: 10px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .day {
+    border: 3px solid #000;
+    padding: 8px;
+    page-break-inside: avoid;
+  }
+  .day-name {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    background: #000;
+    color: #fff;
+    padding: 6px 0;
+    margin: -8px -8px 8px;
+  }
+  .stop {
+    border-bottom: 1px dashed #888;
+    padding: 6px 2px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .stop:last-of-type { border-bottom: none; }
+  .room {
+    font-size: 22px;
+    font-weight: bold;
+  }
+  .time {
+    font-size: 12px;
+    color: #333;
+  }
+  .sort {
+    margin-top: 6px;
+    padding: 6px;
+    border: 2px dashed #000;
+    text-align: center;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .lookup {
+    margin-top: 14px;
+    border: 2px solid #000;
+    padding: 8px;
+    page-break-inside: avoid;
+  }
+  .lookup h2 { margin: 0 0 6px; font-size: 14px; text-transform: uppercase; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th, td { border: 1px solid #000; padding: 4px 6px; text-align: left; }
+  th { background: #eee; }
+  .footer { margin-top: 8px; font-size: 10px; color: #555; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Laundry Pickup</h1>
+<div class="subhead">Monday–Friday · 9:00–11:00 · times are approximate</div>
+
+<div class="grid">
+
+  <div class="day">
+    <div class="day-name">Monday</div>
+    <div class="stop"><span class="room">108</span><span class="time">9:00</span></div>
+    <div class="stop"><span class="room">228</span><span class="time">9:15</span></div>
+    <div class="stop"><span class="room">222</span><span class="time">9:30</span></div>
+    <div class="stop"><span class="room">234</span><span class="time">9:45</span></div>
+    <div class="stop"><span class="room">220</span><span class="time">10:00</span></div>
+    <div class="sort">Sort 10:15–11:00</div>
+  </div>
+
+  <div class="day">
+    <div class="day-name">Tuesday</div>
+    <div class="stop"><span class="room">124</span><span class="time">9:00</span></div>
+    <div class="stop"><span class="room">226</span><span class="time">9:15</span></div>
+    <div class="stop"><span class="room">238</span><span class="time">9:30</span></div>
+    <div class="stop"><span class="room">224</span><span class="time">9:45</span></div>
+    <div class="stop"><span class="room">230</span><span class="time">10:00</span></div>
+    <div class="sort">Sort 10:15–11:00</div>
+  </div>
+
+  <div class="day">
+    <div class="day-name">Wednesday</div>
+    <div class="stop"><span class="room">123</span><span class="time">9:00</span></div>
+    <div class="stop"><span class="room">227</span><span class="time">9:15</span></div>
+    <div class="stop"><span class="room">220</span><span class="time">9:30</span></div>
+    <div class="stop"><span class="room">236</span><span class="time">9:45</span></div>
+    <div class="stop"><span class="room">229</span><span class="time">10:00</span></div>
+    <div class="sort">Sort 10:15–11:00</div>
+  </div>
+
+  <div class="day">
+    <div class="day-name">Thursday</div>
+    <div class="stop"><span class="room">126</span><span class="time">9:00</span></div>
+    <div class="stop"><span class="room">234</span><span class="time">9:15</span></div>
+    <div class="stop"><span class="room">221</span><span class="time">9:30</span></div>
+    <div class="stop"><span class="room">226</span><span class="time">9:45</span></div>
+    <div class="stop"><span class="room">238</span><span class="time">10:00</span></div>
+    <div class="sort">Sort 10:15–11:00</div>
+  </div>
+
+  <div class="day">
+    <div class="day-name">Friday</div>
+    <div class="stop"><span class="room">108</span><span class="time">9:00</span></div>
+    <div class="stop"><span class="room">224</span><span class="time">9:15</span></div>
+    <div class="stop"><span class="room">230</span><span class="time">9:30</span></div>
+    <div class="stop"><span class="room">222</span><span class="time">9:45</span></div>
+    <div class="stop"><span class="room">228</span><span class="time">10:00</span></div>
+    <div class="sort">Sort 10:15–11:00</div>
+  </div>
+
+</div>
+
+<div class="lookup">
+  <h2>Look up your room</h2>
+  <table>
+    <thead>
+      <tr><th>Room</th><th>Pickup day(s) &amp; time</th><th>Room</th><th>Pickup day(s) &amp; time</th><th>Room</th><th>Pickup day(s) &amp; time</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>108</strong></td><td>Mon ~9:00 · Fri ~9:00</td>
+        <td><strong>222</strong></td><td>Mon ~9:30 · Fri ~9:45</td>
+        <td><strong>229</strong></td><td>Wed ~10:00</td>
+      </tr>
+      <tr>
+        <td><strong>123</strong></td><td>Wed ~9:00</td>
+        <td><strong>224</strong></td><td>Tue ~9:45 · Fri ~9:15</td>
+        <td><strong>230</strong></td><td>Tue ~10:00 · Fri ~9:30</td>
+      </tr>
+      <tr>
+        <td><strong>124</strong></td><td>Tue ~9:00</td>
+        <td><strong>226</strong></td><td>Tue ~9:15 · Thu ~9:45</td>
+        <td><strong>234</strong></td><td>Mon ~9:45 · Thu ~9:15</td>
+      </tr>
+      <tr>
+        <td><strong>126</strong></td><td>Thu ~9:00</td>
+        <td><strong>227</strong></td><td>Wed ~9:15</td>
+        <td><strong>236</strong></td><td>Wed ~9:45</td>
+      </tr>
+      <tr>
+        <td><strong>220</strong></td><td>Mon ~10:00 · Wed ~9:30</td>
+        <td><strong>228</strong></td><td>Mon ~9:15 · Fri ~10:00</td>
+        <td><strong>238</strong></td><td>Tue ~9:30 · Thu ~10:00</td>
+      </tr>
+      <tr>
+        <td><strong>221</strong></td><td>Thu ~9:30</td>
+        <td>&nbsp;</td><td>&nbsp;</td>
+        <td>&nbsp;</td><td>&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">Sorting at the central station follows each route, ~10:15–11:00 daily.</div>
+
+</body>
+</html>
