@@ -34,9 +34,23 @@
   .check-list { margin-top: 6px; }
   .check-list label { display: block; margin: 4px 0; font-size: 14px; }
   .box { display: inline-block; width: 16px; height: 16px; border: 2px solid #000; vertical-align: middle; margin-right: 6px; }
+  .back-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  @media print { .back-link { display: none; } }
 </style>
 </head>
 <body>
+
+<a class="back-link" href="index.html">← All Tools</a>
 
 <h1>Sorting Station</h1>
 <div class="sub">Dump all 5 baskets in the middle. Pick up one item at a time. Put it in the right pile. Make a tally mark for each item.</div>

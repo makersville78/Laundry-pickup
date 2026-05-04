@@ -44,9 +44,23 @@
   }
   .check-label { font-size: 14px; text-align: center; margin-top: 4px; font-weight: bold; }
   .check-wrap { display: flex; flex-direction: column; align-items: center; }
+  .back-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  @media print { .back-link { display: none; } }
 </style>
 </head>
 <body>
+
+<a class="back-link" href="index.html">← All Tools</a>
 
 <h1>MY LAUNDRY ROUTE</h1>
 

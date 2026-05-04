@@ -65,9 +65,23 @@
   th, td { border: 1px solid #000; padding: 4px 6px; text-align: left; }
   th { background: #eee; }
   .footer { margin-top: 8px; font-size: 10px; color: #555; text-align: center; }
+  .back-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  @media print { .back-link { display: none; } }
 </style>
 </head>
 <body>
+
+<a class="back-link" href="index.html">← All Tools</a>
 
 <h1>Laundry Pickup</h1>
 <div class="subhead">Monday–Friday · 9:00–11:00 · times are approximate</div>
