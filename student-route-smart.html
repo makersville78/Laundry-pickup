@@ -34,15 +34,60 @@
     border: 3px solid #000;
     padding: 16px 18px;
     margin-bottom: 12px;
+    border-radius: 12px;
+    background: #fff;
+    transition: all 0.2s;
+  }
+  .stop-row {
     display: flex;
     align-items: center;
     gap: 18px;
-    border-radius: 12px;
-    background: #fff;
-    transition: background 0.2s;
   }
   .stop.done {
     background: #e6ffe6;
+  }
+  .stop.my-room {
+    border-width: 5px;
+    border-color: #f59e0b;
+    background: #fffbeb;
+  }
+  .stop.my-room.done {
+    background: #d4edd4;
+  }
+  .stop.faded {
+    opacity: 0.4;
+  }
+  .my-room-badge {
+    display: none;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: #f59e0b;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .stop.my-room .my-room-badge { display: block; }
+  .stop.my-room .room-num { font-size: 80px; }
+  .my-room-btn {
+    margin-top: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: bold;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 6px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-block;
+  }
+  .stop.my-room .my-room-btn {
+    background: #f59e0b;
+    color: #fff;
+    border-color: #f59e0b;
   }
   .room-block { flex: 1; }
   .room-label {
@@ -143,6 +188,8 @@
 <button class="reset-btn" onclick="resetChecks()">Reset Check Marks</button>
 
 <script>
+  let myRoomIdx = -1;
+
   const SCHEDULE = {
     Monday:    [108, 228, 222, 234, 220],
     Tuesday:   [124, 226, 238, 224, 230],
@@ -174,17 +221,23 @@
       const stop = document.createElement("div");
       stop.className = "stop";
       stop.innerHTML = `
-        <div class="room-block">
-          <div class="room-label">Go to room</div>
-          <div class="room-num">${roomNum}</div>
-        </div>
-        <div class="check-wrap">
-          <div class="check-box" onclick="toggleCheck(this)"></div>
-          <div class="check-label">GOT IT!</div>
+        <div class="my-room-badge">★ MY ROOM ★</div>
+        <div class="stop-row">
+          <div class="room-block">
+            <div class="room-label">Go to room</div>
+            <div class="room-num">${roomNum}</div>
+            <button class="my-room-btn" onclick="setMyRoom(${i})">Set as MY ROOM</button>
+          </div>
+          <div class="check-wrap">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-label">GOT IT!</div>
+          </div>
         </div>
       `;
       routeEl.appendChild(stop);
     });
+    myRoomIdx = loadMyRoom();
+    applyMyRoomHighlight();
   }
 
   function toggleCheck(el) {
@@ -195,6 +248,39 @@
   function resetChecks() {
     document.querySelectorAll(".check-box.checked").forEach(b => b.classList.remove("checked"));
     document.querySelectorAll(".stop.done").forEach(s => s.classList.remove("done"));
+    myRoomIdx = -1;
+    saveMyRoom();
+    applyMyRoomHighlight();
+  }
+
+  function setMyRoom(idx) {
+    myRoomIdx = (myRoomIdx === idx) ? -1 : idx;
+    applyMyRoomHighlight();
+    saveMyRoom();
+  }
+
+  function applyMyRoomHighlight() {
+    const stops = document.querySelectorAll(".stop");
+    stops.forEach((s, i) => {
+      s.classList.remove("my-room", "faded");
+      if (myRoomIdx === -1) return;
+      if (i === myRoomIdx) s.classList.add("my-room");
+      else s.classList.add("faded");
+    });
+  }
+
+  function loadMyRoom() {
+    const today = new Date().toDateString();
+    try {
+      const data = JSON.parse(localStorage.getItem("myRoom") || "null");
+      if (data && data.date === today) return data.idx;
+    } catch (e) {}
+    return -1;
+  }
+
+  function saveMyRoom() {
+    const today = new Date().toDateString();
+    localStorage.setItem("myRoom", JSON.stringify({ date: today, idx: myRoomIdx }));
   }
 
   render();
