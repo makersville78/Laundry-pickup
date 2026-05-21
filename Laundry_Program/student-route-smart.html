@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Laundry Route</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #000;
+    margin: 0;
+    padding: 20px;
+    background: #fff;
+  }
+  h1 {
+    font-size: 32px;
+    margin: 0 0 4px;
+    text-align: center;
+  }
+  .day-banner {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .stop {
+    border: 3px solid #000;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: #fff;
+    transition: all 0.2s;
+  }
+  .stop-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .stop.done {
+    background: #e6ffe6;
+  }
+  .stop.my-room {
+    border-width: 5px;
+    border-color: #f59e0b;
+    background: #fffbeb;
+  }
+  .stop.my-room.done {
+    background: #d4edd4;
+  }
+  .stop.faded {
+    opacity: 0.4;
+  }
+  .my-room-badge {
+    display: none;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: #f59e0b;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .stop.my-room .my-room-badge { display: block; }
+  .stop.my-room .room-num { font-size: 80px; }
+  .my-room-btn {
+    margin-top: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: bold;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 6px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-block;
+  }
+  .stop.my-room .my-room-btn {
+    background: #f59e0b;
+    color: #fff;
+    border-color: #f59e0b;
+  }
+  .room-block { flex: 1; }
+  .room-label {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+  }
+  .room-num {
+    font-size: 64px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .check-box {
+    width: 72px;
+    height: 72px;
+    border: 4px solid #000;
+    border-radius: 14px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .check-box.checked::after {
+    content: "✓";
+    font-size: 56px;
+    font-weight: bold;
+    color: #000;
+    line-height: 1;
+  }
+  .check-label {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 4px;
+    font-weight: bold;
+  }
+  .check-wrap { display: flex; flex-direction: column; align-items: center; }
+
+  .weekend-notice {
+    border: 3px dashed #000;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background: #fffbe6;
+  }
+  .weekend-notice .big {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .weekend-notice .small {
+    font-size: 14px;
+  }
+
+  .reset-btn {
+    display: block;
+    margin: 20px auto 0;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .back-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  @media print { .back-link { display: none; } }
+</style>
+</head>
+<body>
+
+<a class="back-link" href="index.html">← All Tools</a>
+
+<h1>MY LAUNDRY ROUTE</h1>
+<div id="day-banner" class="day-banner"></div>
+
+<div id="weekend" class="weekend-notice" style="display:none">
+  <div class="big">No laundry pickup today!</div>
+  <div class="small">Here's a preview of Monday's route:</div>
+</div>
+
+<div id="route"></div>
+
+<button class="reset-btn" onclick="resetChecks()">Reset Check Marks</button>
+
+<script>
+  let myRoomIdx = -1;
+
+  const SCHEDULE = {
+    Monday:    [108, 226, 220, 234, 228, 124, 221],
+    Tuesday:   [123, 227, 221, 236, 222, 230, 126],
+    Wednesday: [108, 224, 236, 227, 220, 229, 126],
+    Thursday:  [123, 234, 226, 220, 238, 229, 124],
+    Friday:    [108, 228, 222, 230, 238, 224, 124]
+  };
+
+  const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  function render() {
+    const today = new Date();
+    const dayName = DAY_NAMES[today.getDay()];
+    const dateStr = MONTH_NAMES[today.getMonth()] + " " + today.getDate();
+
+    const isWeekday = SCHEDULE.hasOwnProperty(dayName);
+    const rooms = isWeekday ? SCHEDULE[dayName] : SCHEDULE.Monday;
+
+    document.getElementById("day-banner").textContent = dayName + " · " + dateStr;
+
+    if (!isWeekday) {
+      document.getElementById("weekend").style.display = "block";
+    }
+
+    const routeEl = document.getElementById("route");
+    routeEl.innerHTML = "";
+    rooms.forEach((roomNum, i) => {
+      const stop = document.createElement("div");
+      stop.className = "stop";
+      stop.innerHTML = `
+        <div class="my-room-badge">★ MY ROOM ★</div>
+        <div class="stop-row">
+          <div class="room-block">
+            <div class="room-label">Go to room</div>
+            <div class="room-num">${roomNum}</div>
+            <button class="my-room-btn" onclick="setMyRoom(${i})">Set as MY ROOM</button>
+          </div>
+          <div class="check-wrap">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-label">GOT IT!</div>
+          </div>
+        </div>
+      `;
+      routeEl.appendChild(stop);
+    });
+    myRoomIdx = loadMyRoom();
+    applyMyRoomHighlight();
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle("checked");
+    el.closest(".stop").classList.toggle("done");
+  }
+
+  function resetChecks() {
+    document.querySelectorAll(".check-box.checked").forEach(b => b.classList.remove("checked"));
+    document.querySelectorAll(".stop.done").forEach(s => s.classList.remove("done"));
+    myRoomIdx = -1;
+    saveMyRoom();
+    applyMyRoomHighlight();
+  }
+
+  function setMyRoom(idx) {
+    myRoomIdx = (myRoomIdx === idx) ? -1 : idx;
+    applyMyRoomHighlight();
+    saveMyRoom();
+  }
+
+  function applyMyRoomHighlight() {
+    const stops = document.querySelectorAll(".stop");
+    stops.forEach((s, i) => {
+      s.classList.remove("my-room", "faded");
+      if (myRoomIdx === -1) return;
+      if (i === myRoomIdx) s.classList.add("my-room");
+      else s.classList.add("faded");
+    });
+  }
+
+  function loadMyRoom() {
+    const today = new Date().toDateString();
+    try {
+      const data = JSON.parse(localStorage.getItem("myRoom") || "null");
+      if (data && data.date === today) return data.idx;
+    } catch (e) {}
+    return -1;
+  }
+
+  function saveMyRoom() {
+    const today = new Date().toDateString();
+    localStorage.setItem("myRoom", JSON.stringify({ date: today, idx: myRoomIdx }));
+  }
+
+  render();
+</script>
+
+</body>
+</html>

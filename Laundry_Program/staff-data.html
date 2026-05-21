@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staff Data Entry</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #000;
+    margin: 0;
+    padding: 16px;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #fff;
+  }
+  h1 { font-size: 28px; margin: 0 0 4px; text-align: center; }
+  h2 { font-size: 20px; margin: 16px 0 8px; }
+  .day-banner {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .back-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Roster setup */
+  .student-card {
+    border: 3px solid #000;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .student-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #000;
+    flex-shrink: 0;
+    background: #f0f0f0;
+  }
+  .student-photo-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px dashed #888;
+    flex-shrink: 0;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #888;
+  }
+  .student-card-body { flex: 1; }
+  .student-name-input {
+    width: 100%;
+    font-size: 18px;
+    padding: 8px;
+    border: 2px solid #000;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .photo-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .photo-btn input { display: none; }
+  .delete-btn {
+    background: #fff;
+    border: 2px solid #c00;
+    color: #c00;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  /* Daily setup */
+  .assign-row {
+    border: 3px solid #000;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .assign-stop-num {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .assign-room {
+    font-size: 32px;
+    font-weight: bold;
+    min-width: 80px;
+    text-align: center;
+  }
+  .assign-select {
+    flex: 1;
+    font-size: 16px;
+    padding: 8px;
+    border: 2px solid #000;
+    border-radius: 6px;
+    background: #fff;
+  }
+
+  /* Data entry */
+  .progress-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  .progress-dot {
+    flex: 1;
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+  }
+  .progress-dot.done { background: #16a34a; }
+  .progress-dot.current { background: #000; }
+  .progress-dot.skipped { background: #ccc; opacity: 0.4; }
+
+  .stop-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 3px solid #000;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .stop-photo {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #000;
+    flex-shrink: 0;
+    background: #f0f0f0;
+  }
+  .stop-photo-placeholder {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    border: 3px dashed #888;
+    flex-shrink: 0;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #888;
+  }
+  .stop-meta { flex: 1; }
+  .stop-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #555;
+  }
+  .stop-room {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .stop-student {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 4px;
+  }
+
+  .skill-row {
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .skill-label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .prompt-btns {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+  }
+  .prompt-btn {
+    border: 2px solid #000;
+    border-radius: 6px;
+    padding: 10px 4px;
+    font-weight: bold;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .prompt-btn.selected {
+    background: #000;
+    color: #fff;
+  }
+  .prompt-legend {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    font-size: 9px;
+    color: #555;
+    text-align: center;
+    margin-top: 4px;
+    margin-bottom: 12px;
+  }
+
+  .notes-input {
+    width: 100%;
+    font-size: 15px;
+    padding: 10px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    min-height: 60px;
+    font-family: inherit;
+    resize: vertical;
+  }
+
+  /* Buttons */
+  .btn-primary, .btn-secondary {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 12px;
+    border: 3px solid #000;
+  }
+  .btn-primary {
+    background: #000;
+    color: #fff;
+  }
+  .btn-primary:disabled {
+    background: #ccc;
+    border-color: #ccc;
+    color: #777;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: #000;
+  }
+
+  .nav-btns {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .nav-btns .btn-primary,
+  .nav-btns .btn-secondary { margin-top: 0; }
+
+  /* Summary */
+  .summary-stop {
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .summary-stop-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .summary-stop-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #000;
+  }
+  .summary-stop-info { flex: 1; }
+  .summary-skill-line {
+    font-size: 14px;
+    margin: 2px 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  .summary-skill-line .level {
+    font-weight: bold;
+    background: #000;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  .summary-notes {
+    font-size: 13px;
+    color: #555;
+    margin-top: 8px;
+    font-style: italic;
+  }
+  .edit-link {
+    color: #000;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .empty-msg { color: #777; font-size: 14px; text-align: center; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<a class="back-link" href="index.html">← All Tools</a>
+
+<h1>Staff Data Entry</h1>
+<div id="day-banner" class="day-banner">Loading…</div>
+
+<!-- VIEW: Roster Setup -->
+<div id="view-roster" class="view">
+  <h2>Set up your student roster</h2>
+  <p style="font-size:14px; color:#555;">Add each student once. Photos and names stay on this device only — they don't get uploaded anywhere. You'll only do this once at the start of the year (or whenever your roster changes).</p>
+  <div id="roster-list"></div>
+  <button class="btn-secondary" onclick="addEmptyStudent()">+ Add Student</button>
+  <button class="btn-primary" id="roster-done-btn" onclick="finishRosterSetup()">Done — Continue to Today's Route</button>
+</div>
+
+<!-- VIEW: Daily Setup -->
+<div id="view-daily" class="view">
+  <h2>Assign students to today's rooms</h2>
+  <p style="font-size:14px; color:#555;">Pick which student is at each stop based on the line-up order. If fewer students than stops today, pick "skip (no student today)" for the extras. Then lock the route and start collecting data.</p>
+  <div id="assign-list"></div>
+  <button class="btn-primary" id="lock-route-btn" onclick="lockRoute()" disabled>Lock Route &amp; Start</button>
+  <button class="btn-secondary" onclick="goToRoster()">Edit Roster</button>
+</div>
+
+<!-- VIEW: Data Entry -->
+<div id="view-data" class="view">
+  <div id="progress-bar" class="progress-bar"></div>
+  <div id="stop-header" class="stop-header"></div>
+  <div id="skills-container"></div>
+  <textarea id="notes-input" class="notes-input" placeholder="Notes for this stop (optional)"></textarea>
+  <div class="nav-btns">
+    <button class="btn-secondary" id="prev-btn" onclick="prevStop()">◀ Previous</button>
+    <button class="btn-primary" id="next-btn" onclick="nextStop()">Next Stop ▶</button>
+  </div>
+  <button class="btn-secondary" onclick="goToSummary()">Skip to Summary</button>
+</div>
+
+<!-- VIEW: Summary -->
+<div id="view-summary" class="view">
+  <h2>Today's Data</h2>
+  <div id="summary-list"></div>
+  <button class="btn-primary" onclick="emailSummary()">📧 Email This Summary</button>
+  <button class="btn-secondary" onclick="goToStopFromSummary(0)">◀ Back to Data Entry</button>
+  <button class="btn-secondary" onclick="resetForTomorrow()" style="border-color:#c00; color:#c00;">Reset for Tomorrow (Clears Today's Data)</button>
+</div>
+
+<script>
+  // ------ Configuration ------
+  const SCHEDULE = {
+    Monday:    [108, 226, 220, 234, 228, 124, 221],
+    Tuesday:   [123, 227, 221, 236, 222, 230, 126],
+    Wednesday: [108, 224, 236, 227, 220, 229, 126],
+    Thursday:  [123, 234, 226, 220, 238, 229, 124],
+    Friday:    [108, 228, 222, 230, 238, 224, 124]
+  };
+
+  const SKILLS = [
+    { key: "foundRoom",   label: "Found the room" },
+    { key: "knocked",     label: "Knocked on door" },
+    { key: "greeted",     label: "Greeted teacher" },
+    { key: "foundBasket", label: "Found basket" },
+    { key: "leftBasket",  label: "Left room, basket on cart" }
+  ];
+
+  const PROMPT_LEVELS = [
+    { code: "I",  label: "Independent" },
+    { code: "V",  label: "Verbal" },
+    { code: "G",  label: "Gestural" },
+    { code: "M",  label: "Model" },
+    { code: "PP", label: "Partial Phys" },
+    { code: "FP", label: "Full Phys" }
+  ];
+
+  const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  // ------ State ------
+  let STATE = {
+    roster: [],            // [{name, photo}]
+    session: null,         // {dateKey, dayName, dateLong, rooms[], assignments[{room, studentIndex}], data{stopIndex: {skill: level, notes}}, locked}
+    currentStopIndex: 0
+  };
+
+  // ------ Init ------
+  function init() {
+    loadRoster();
+    setDayBanner();
+
+    if (STATE.roster.length === 0) {
+      addEmptyStudent();
+      addEmptyStudent();
+      addEmptyStudent();
+      addEmptyStudent();
+      addEmptyStudent();
+      showView("roster");
+      renderRoster();
+      return;
+    }
+
+    const todayKey = todayKeyStr();
+    const todayInfo = todayInfo_();
+    const isWeekday = SCHEDULE.hasOwnProperty(todayInfo.dayName);
+
+    if (!isWeekday) {
+      document.getElementById("view-daily").innerHTML =
+        "<h2>No pickup today</h2><p>Today is "+todayInfo.dayName+" — no laundry route. Come back Monday–Friday.</p><button class='btn-secondary' onclick='goToRoster()'>Edit Roster</button>";
+      showView("daily");
+      return;
+    }
+
+    STATE.session = loadSession(todayKey);
+    if (!STATE.session) {
+      STATE.session = newSession(todayKey, todayInfo);
+    }
+    if (!STATE.session.locked) {
+      renderDailySetup();
+      showView("daily");
+    } else {
+      STATE.currentStopIndex = 0;
+      renderDataEntry();
+      showView("data");
+    }
+  }
+
+  function todayInfo_() {
+    const d = new Date();
+    return {
+      dateKey: d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()),
+      dayName: DAY_NAMES[d.getDay()],
+      dateLong: MONTH_NAMES[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear(),
+      dateShort: MONTH_NAMES[d.getMonth()].slice(0,3)+" "+d.getDate()
+    };
+  }
+  function pad(n) { return n < 10 ? "0"+n : ""+n; }
+  function todayKeyStr() { return todayInfo_().dateKey; }
+
+  function setDayBanner() {
+    const t = todayInfo_();
+    document.getElementById("day-banner").textContent = t.dayName + " · " + t.dateLong;
+  }
+
+  function showView(name) {
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById("view-"+name).classList.add("active");
+  }
+
+  // ------ Storage ------
+  function loadRoster() {
+    try {
+      STATE.roster = JSON.parse(localStorage.getItem("roster") || "[]");
+    } catch(e) { STATE.roster = []; }
+  }
+  function saveRoster() {
+    localStorage.setItem("roster", JSON.stringify(STATE.roster));
+  }
+  function loadSession(dateKey) {
+    try {
+      const raw = localStorage.getItem("session-"+dateKey);
+      return raw ? JSON.parse(raw) : null;
+    } catch(e) { return null; }
+  }
+  function saveSession() {
+    if (!STATE.session) return;
+    localStorage.setItem("session-"+STATE.session.dateKey, JSON.stringify(STATE.session));
+  }
+  function newSession(dateKey, info) {
+    return {
+      dateKey: dateKey,
+      dayName: info.dayName,
+      dateLong: info.dateLong,
+      dateShort: info.dateShort,
+      rooms: SCHEDULE[info.dayName].slice(),
+      assignments: SCHEDULE[info.dayName].map(r => ({ room: r, studentIndex: -1 })),
+      data: {},
+      locked: false
+    };
+  }
+
+  // ------ Roster setup view ------
+  function renderRoster() {
+    const list = document.getElementById("roster-list");
+    list.innerHTML = "";
+    if (STATE.roster.length === 0) {
+      list.innerHTML = "<div class='empty-msg'>No students yet. Tap + Add Student.</div>";
+    }
+    STATE.roster.forEach((s, idx) => {
+      const card = document.createElement("div");
+      card.className = "student-card";
+      const photoHtml = s.photo
+        ? `<img class="student-photo" src="${s.photo}" alt="">`
+        : `<div class="student-photo-placeholder">+</div>`;
+      card.innerHTML = `
+        ${photoHtml}
+        <div class="student-card-body">
+          <input class="student-name-input" type="text" placeholder="Student name" value="${escapeHtml(s.name||"")}" oninput="updateStudentName(${idx}, this.value)">
+          <label class="photo-btn">
+            ${s.photo ? "Replace Photo" : "Take / Upload Photo"}
+            <input type="file" accept="image/*" capture="user" onchange="onPhotoSelected(${idx}, this.files[0])">
+          </label>
+        </div>
+        <button class="delete-btn" onclick="deleteStudent(${idx})">Remove</button>
+      `;
+      list.appendChild(card);
+    });
+    updateRosterDoneBtn();
+  }
+  function addEmptyStudent() {
+    STATE.roster.push({ name: "", photo: "" });
+    renderRoster();
+  }
+  function updateStudentName(idx, name) {
+    STATE.roster[idx].name = name;
+    saveRoster();
+    updateRosterDoneBtn();
+  }
+  function onPhotoSelected(idx, file) {
+    if (!file) return;
+    compressPhoto(file).then(dataUrl => {
+      STATE.roster[idx].photo = dataUrl;
+      saveRoster();
+      renderRoster();
+    });
+  }
+  function deleteStudent(idx) {
+    if (!confirm("Remove this student from the roster?")) return;
+    STATE.roster.splice(idx, 1);
+    saveRoster();
+    renderRoster();
+  }
+  function updateRosterDoneBtn() {
+    const btn = document.getElementById("roster-done-btn");
+    const validCount = STATE.roster.filter(s => s.name && s.name.trim()).length;
+    btn.disabled = validCount < 1;
+    btn.textContent = validCount < 1
+      ? "Add at least one student to continue"
+      : "Done — Continue to Today's Route";
+  }
+  function finishRosterSetup() {
+    STATE.roster = STATE.roster.filter(s => s.name && s.name.trim());
+    saveRoster();
+    init();
+  }
+
+  // ------ Daily setup view ------
+  function renderDailySetup() {
+    const list = document.getElementById("assign-list");
+    list.innerHTML = "";
+    STATE.session.assignments.forEach((a, i) => {
+      const row = document.createElement("div");
+      row.className = "assign-row";
+      const optionsHtml = STATE.roster.map((s, idx) =>
+        `<option value="${idx}" ${a.studentIndex === idx ? "selected" : ""}>${escapeHtml(s.name)}</option>`
+      ).join("");
+      row.innerHTML = `
+        <div>
+          <div class="assign-stop-num">Stop ${i+1}</div>
+          <div class="assign-room">${a.room}</div>
+        </div>
+        <select class="assign-select" onchange="assignStudent(${i}, this.value)">
+          <option value="-1" ${a.studentIndex === -1 ? "selected" : ""}>— pick student —</option>
+          ${optionsHtml}
+          <option value="-2" ${a.studentIndex === -2 ? "selected" : ""}>— skip (no student today) —</option>
+        </select>
+      `;
+      list.appendChild(row);
+    });
+    updateLockBtn();
+  }
+  function assignStudent(stopIdx, value) {
+    STATE.session.assignments[stopIdx].studentIndex = parseInt(value, 10);
+    saveSession();
+    updateLockBtn();
+  }
+  function updateLockBtn() {
+    const btn = document.getElementById("lock-route-btn");
+    // Allow lock if every assignment is either a student (>=0) or explicit skip (-2)
+    const allDecided = STATE.session.assignments.every(a => a.studentIndex >= 0 || a.studentIndex === -2);
+    btn.disabled = !allDecided;
+  }
+  function lockRoute() {
+    STATE.session.locked = true;
+    saveSession();
+    const first = getNextNonSkippedIdx(-1, 1);
+    if (first === -1) {
+      // All stops skipped — nothing to record, go straight to summary
+      goToSummary();
+      return;
+    }
+    STATE.currentStopIndex = first;
+    renderDataEntry();
+    showView("data");
+  }
+  function goToRoster() {
+    renderRoster();
+    showView("roster");
+  }
+
+  // ------ Data entry view ------
+  function renderDataEntry() {
+    const i = STATE.currentStopIndex;
+    const a = STATE.session.assignments[i];
+    const student = STATE.roster[a.studentIndex];
+    const data = STATE.session.data[i] || {};
+
+    // progress
+    const pb = document.getElementById("progress-bar");
+    pb.innerHTML = "";
+    STATE.session.assignments.forEach((assignment, idx) => {
+      const dot = document.createElement("div");
+      dot.className = "progress-dot";
+      if (idx === i) dot.classList.add("current");
+      else if (assignment.studentIndex === -2) dot.classList.add("skipped");
+      else if (STATE.session.data[idx]) dot.classList.add("done");
+      pb.appendChild(dot);
+    });
+
+    // header
+    const photoHtml = student && student.photo
+      ? `<img class="stop-photo" src="${student.photo}" alt="">`
+      : `<div class="stop-photo-placeholder">${student ? student.name.charAt(0).toUpperCase() : "?"}</div>`;
+    document.getElementById("stop-header").innerHTML = `
+      ${photoHtml}
+      <div class="stop-meta">
+        <div class="stop-label">Stop ${i+1} of ${STATE.session.assignments.length} · Room</div>
+        <div class="stop-room">${a.room}</div>
+        <div class="stop-student">${student ? escapeHtml(student.name) : "(no student)"}</div>
+      </div>
+    `;
+
+    // skills
+    const sc = document.getElementById("skills-container");
+    sc.innerHTML = "";
+    SKILLS.forEach(skill => {
+      const row = document.createElement("div");
+      row.className = "skill-row";
+      const selected = data[skill.key];
+      const btnsHtml = PROMPT_LEVELS.map(p =>
+        `<button class="prompt-btn ${selected === p.code ? "selected" : ""}" onclick="setSkill(${i}, '${skill.key}', '${p.code}')">${p.code}</button>`
+      ).join("");
+      const legendHtml = PROMPT_LEVELS.map(p => `<div>${p.label}</div>`).join("");
+      row.innerHTML = `
+        <div class="skill-label">${skill.label}</div>
+        <div class="prompt-btns">${btnsHtml}</div>
+        <div class="prompt-legend">${legendHtml}</div>
+      `;
+      sc.appendChild(row);
+    });
+
+    // notes
+    document.getElementById("notes-input").value = data.notes || "";
+
+    // nav
+    document.getElementById("prev-btn").disabled = i === 0;
+    const isLast = i === STATE.session.assignments.length - 1;
+    document.getElementById("next-btn").textContent = isLast ? "Done — View Summary ▶" : "Next Stop ▶";
+  }
+  function setSkill(stopIdx, skillKey, level) {
+    if (!STATE.session.data[stopIdx]) STATE.session.data[stopIdx] = {};
+    if (STATE.session.data[stopIdx][skillKey] === level) {
+      delete STATE.session.data[stopIdx][skillKey];
+    } else {
+      STATE.session.data[stopIdx][skillKey] = level;
+    }
+    saveSession();
+    renderDataEntry();
+  }
+  function captureNotes() {
+    const notes = document.getElementById("notes-input").value;
+    if (!STATE.session.data[STATE.currentStopIndex]) STATE.session.data[STATE.currentStopIndex] = {};
+    STATE.session.data[STATE.currentStopIndex].notes = notes;
+    saveSession();
+  }
+  function getNextNonSkippedIdx(fromIdx, direction) {
+    const len = STATE.session.assignments.length;
+    let idx = fromIdx + direction;
+    while (idx >= 0 && idx < len) {
+      if (STATE.session.assignments[idx].studentIndex !== -2) return idx;
+      idx += direction;
+    }
+    return -1;
+  }
+  function prevStop() {
+    captureNotes();
+    const prev = getNextNonSkippedIdx(STATE.currentStopIndex, -1);
+    if (prev !== -1) {
+      STATE.currentStopIndex = prev;
+      renderDataEntry();
+      window.scrollTo(0,0);
+    }
+  }
+  function nextStop() {
+    captureNotes();
+    const next = getNextNonSkippedIdx(STATE.currentStopIndex, 1);
+    if (next !== -1) {
+      STATE.currentStopIndex = next;
+      renderDataEntry();
+      window.scrollTo(0,0);
+    } else {
+      goToSummary();
+    }
+  }
+  function goToSummary() {
+    captureNotes();
+    renderSummary();
+    showView("summary");
+    window.scrollTo(0,0);
+  }
+  function goToStopFromSummary(idx) {
+    STATE.currentStopIndex = idx;
+    renderDataEntry();
+    showView("data");
+    window.scrollTo(0,0);
+  }
+
+  // ------ Summary view ------
+  function renderSummary() {
+    const list = document.getElementById("summary-list");
+    list.innerHTML = "";
+    let shown = 0;
+    STATE.session.assignments.forEach((a, i) => {
+      if (a.studentIndex === -2) return; // skipped stops omitted from summary
+      shown++;
+      const student = STATE.roster[a.studentIndex];
+      const data = STATE.session.data[i] || {};
+      const card = document.createElement("div");
+      card.className = "summary-stop";
+      const photoHtml = student && student.photo
+        ? `<img class="summary-stop-photo" src="${student.photo}">`
+        : `<div class="summary-stop-photo" style="display:flex;align-items:center;justify-content:center;font-weight:bold">${student ? student.name.charAt(0).toUpperCase() : "?"}</div>`;
+      const skillsHtml = SKILLS.map(skill => {
+        const lvl = data[skill.key] || "—";
+        return `<div class="summary-skill-line"><span>${skill.label}</span><span class="level">${lvl}</span></div>`;
+      }).join("");
+      const notesHtml = data.notes ? `<div class="summary-notes">"${escapeHtml(data.notes)}"</div>` : "";
+      card.innerHTML = `
+        <div class="summary-stop-header">
+          ${photoHtml}
+          <div class="summary-stop-info">
+            <div style="font-weight:bold;font-size:18px;">Stop ${i+1} · Room ${a.room}</div>
+            <div>${student ? escapeHtml(student.name) : "(no student)"}</div>
+          </div>
+          <span class="edit-link" onclick="goToStopFromSummary(${i})">Edit</span>
+        </div>
+        ${skillsHtml}
+        ${notesHtml}
+      `;
+      list.appendChild(card);
+    });
+    if (shown === 0) {
+      list.innerHTML = "<div class='empty-msg'>All stops were skipped — no data recorded today.</div>";
+    }
+  }
+
+  function emailSummary() {
+    const lines = [];
+    lines.push("Laundry Pickup Data");
+    lines.push(STATE.session.dayName + ", " + STATE.session.dateLong);
+    lines.push("");
+    STATE.session.assignments.forEach((a, i) => {
+      if (a.studentIndex === -2) return; // skipped stops omitted from email
+      const student = STATE.roster[a.studentIndex];
+      const data = STATE.session.data[i] || {};
+      lines.push("STOP " + (i+1) + " — Room " + a.room);
+      lines.push("Student: " + (student ? student.name : "(no student)"));
+      SKILLS.forEach(skill => {
+        const lvl = data[skill.key] || "(not recorded)";
+        lines.push("  " + skill.label + ": " + lvl);
+      });
+      if (data.notes) lines.push("  Notes: " + data.notes);
+      lines.push("");
+    });
+    lines.push("Prompt scale:  I=Independent  V=Verbal  G=Gestural  M=Model  PP=Partial Physical  FP=Full Physical");
+
+    const subject = "Laundry Pickup Data — " + STATE.session.dayName + " " + STATE.session.dateShort;
+    const body = lines.join("\n");
+    window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  }
+
+  function resetForTomorrow() {
+    if (!confirm("Clear today's data? The roster will be kept. This cannot be undone.")) return;
+    localStorage.removeItem("session-"+STATE.session.dateKey);
+    STATE.session = null;
+    init();
+  }
+
+  // ------ Photo compression ------
+  function compressPhoto(file) {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const max = 320;
+          let w = img.width, h = img.height;
+          if (w > h) {
+            if (w > max) { h = h * (max / w); w = max; }
+          } else {
+            if (h > max) { w = w * (max / h); h = max; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", 0.7));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, c => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    }[c]));
+  }
+
+  // Save notes if user navigates away
+  window.addEventListener("beforeunload", () => {
+    if (STATE.session && STATE.session.locked) captureNotes();
+  });
+
+  init();
+</script>
+
+</body>
+</html>

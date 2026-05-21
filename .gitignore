@@ -13,3 +13,12 @@ desktop.ini
 MEMORY.md
 memory/
 .claude/
+
+# Personal docs not for the public repo
+Tech_Position_proposal*.docx
+Tech_Position_proposal*.md
+_Farewell_Speech_Template*
+
+# Separate non-Laundry workspace
+Treasure_Island/
+

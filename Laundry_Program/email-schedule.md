@@ -17,30 +17,30 @@ Following up on the basket I dropped off — here's the weekly pickup schedule f
 
 | Room | Pickup day(s) and time |
 |------|------------------------|
-| 108  | Monday ~9:00 · Friday ~9:00 |
-| 123  | Wednesday ~9:00 |
-| 124  | Tuesday ~9:00 |
-| 126  | Thursday ~9:00 |
-| 220  | Monday ~10:00 · Wednesday ~9:30 |
-| 221  | Thursday ~9:30 |
-| 222  | Monday ~9:30 · Friday ~9:45 |
-| 224  | Tuesday ~9:45 · Friday ~9:15 |
-| 226  | Tuesday ~9:15 · Thursday ~9:45 |
-| 227  | Wednesday ~9:15 |
-| 228  | Monday ~9:15 · Friday ~10:00 |
-| 229  | Wednesday ~10:00 |
-| 230  | Tuesday ~10:00 · Friday ~9:30 |
-| 234  | Monday ~9:45 · Thursday ~9:15 |
-| 236  | Wednesday ~9:45 |
-| 238  | Tuesday ~9:30 · Thursday ~10:00 |
+| 108  | Monday ~9:00 · Wednesday ~9:00 · Friday ~9:00 |
+| 123  | Tuesday ~9:00 · Thursday ~9:00 |
+| 124  | Monday ~9:50 · Thursday ~10:00 · Friday ~10:00 |
+| 126  | Tuesday ~10:00 · Wednesday ~10:00 |
+| 220  | Monday ~9:20 · Wednesday ~9:40 · Thursday ~9:30 |
+| 221  | Monday ~10:00 · Tuesday ~9:20 |
+| 222  | Tuesday ~9:40 · Friday ~9:20 |
+| 224  | Wednesday ~9:10 · Friday ~9:50 |
+| 226  | Monday ~9:10 · Thursday ~9:20 |
+| 227  | Tuesday ~9:10 · Wednesday ~9:30 |
+| 228  | Monday ~9:40 · Friday ~9:10 |
+| 229  | Wednesday ~9:50 · Thursday ~9:50 |
+| 230  | Tuesday ~9:50 · Friday ~9:30 |
+| 234  | Monday ~9:30 · Thursday ~9:10 |
+| 236  | Tuesday ~9:30 · Wednesday ~9:20 |
+| 238  | Thursday ~9:40 · Friday ~9:40 |
 
 ## Daily route overview
 
-- **Monday** — 108 → 228 → 222 → 234 → 220
-- **Tuesday** — 124 → 226 → 238 → 224 → 230
-- **Wednesday** — 123 → 227 → 220 → 236 → 229
-- **Thursday** — 126 → 234 → 221 → 226 → 238
-- **Friday** — 108 → 224 → 230 → 222 → 228
+- **Monday** — 108 → 226 → 220 → 234 → 228 → 124 → 221
+- **Tuesday** — 123 → 227 → 221 → 236 → 222 → 230 → 126
+- **Wednesday** — 108 → 224 → 236 → 227 → 220 → 229 → 126
+- **Thursday** — 123 → 234 → 226 → 220 → 238 → 229 → 124
+- **Friday** — 108 → 228 → 222 → 230 → 238 → 224 → 124
 
 Sorting happens at the central station from about 10:15 to 11:00 each day.
 
